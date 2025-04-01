@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '1.13.3'
+}
+
+group 'com.github.chenkai2'
+version '0.1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+}
+
+// 配置IntelliJ IDEA插件开发环境
+intellij {
+    version = '2022.3.3'
+    type = 'IC' // 社区版
+    plugins = ['git4idea']
+}
+
+patchPluginXml {
+    changeNotes = """
+        <h3>0.1.0</h3>
+        <ul>
+            <li>初始版本</li>
+            <li>支持基于AI自动生成Git提交信息</li>
+            <li>支持多种LLM服务，包括Ollama和OpenAI</li>
+            <li>可自定义提示词模板和系统指令</li>
+        </ul>
+    """
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// 设置Java兼容性
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
