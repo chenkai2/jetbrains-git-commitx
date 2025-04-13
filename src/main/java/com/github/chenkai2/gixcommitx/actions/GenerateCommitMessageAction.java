@@ -74,12 +74,26 @@ public class GenerateCommitMessageAction extends AnAction {
                     // 调用LLM服务生成提交信息
                     CompletableFuture<String> future = llmService.generateCommitMessage(stagedFiles, diffContent);
                     future.thenAccept(commitMessage -> {
-                        // 在UI线程中设置提交信息
-                        commitMessageI.setCommitMessage(commitMessage);
-                        Messages.showInfoMessage(project, "已生成提交信息", "成功");
+                        // 确保在UI线程中设置提交信息
+                        com.intellij.openapi.application.ApplicationManager.getApplication().invokeLater(() -> {
+                            try {
+                                // 设置提交信息
+                                commitMessageI.setCommitMessage(commitMessage);
+                                // 确保提交信息编辑器刷新
+                                if (commitMessageI instanceof Refreshable) {
+                                    ((Refreshable) commitMessageI).refresh();
+                                }
+                                Messages.showInfoMessage(project, "已生成提交信息", "成功");
+                            } catch (Exception e) {
+                                LOG.error("设置提交信息失败", e);
+                                Messages.showErrorDialog(project, "设置提交信息失败: " + e.getMessage(), "错误");
+                            }
+                        });
                     }).exceptionally(ex -> {
                         LOG.error("生成提交信息失败", ex);
-                        Messages.showErrorDialog(project, "生成提交信息失败: " + ex.getMessage(), "错误");
+                        com.intellij.openapi.application.ApplicationManager.getApplication().invokeLater(() -> {
+                            Messages.showErrorDialog(project, "生成提交信息失败: " + ex.getMessage(), "错误");
+                        });
                         return null;
                     });
                 } catch (Exception ex) {

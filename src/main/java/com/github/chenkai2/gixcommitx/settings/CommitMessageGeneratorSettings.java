@@ -3,7 +3,7 @@ package com.github.chenkai2.gixcommitx.settings;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.components.service;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +39,7 @@ public class CommitMessageGeneratorSettings implements PersistentStateComponent<
      * 获取设置实例
      */
     public static CommitMessageGeneratorSettings getInstance() {
-        return service.getInstance(CommitMessageGeneratorSettings.class);
+        return ServiceManager.getService(CommitMessageGeneratorSettings.class);
     }
 
     @Nullable
